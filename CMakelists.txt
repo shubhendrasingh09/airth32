@@ -7,7 +7,11 @@ set(CMAKE_C_STANDARD 11)
 # Build the shared library
 # --------------------------
 add_library(repolib SHARED ${CMAKE_CURRENT_SOURCE_DIR}/src/arith32.c)
-set_target_properties(repolib PROPERTIES PREFIX "")
+set_target_properties(repolib PROPERTIES
+    VERSION 1.0
+    SOVERSION 1
+    OUTPUT_NAME "repolib"
+)
 target_include_directories(repolib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/inc)
 
 # --------------------------
@@ -16,7 +20,6 @@ target_include_directories(repolib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/inc)
 install(TARGETS repolib
     LIBRARY DESTINATION lib
 )
-
 install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/inc/arith32.h DESTINATION include)
 
 # --------------------------
