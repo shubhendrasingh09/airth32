@@ -6,12 +6,13 @@ set(CMAKE_C_STANDARD 11)
 # --------------------------
 # Build the shared library
 # --------------------------
-add_library(repolib SHARED ${CMAKE_CURRENT_SOURCE_DIR}/src/arith32.c)
+add_library(repolib SHARED ${CMAKE_CURRENT_SOURCE_DIR}/src/arith32.c ${CMAKE_CURRENT_SOURCE_DIR}/src/printSrc.c)
 set_target_properties(repolib PROPERTIES
     VERSION 1.0
     SOVERSION 1
     OUTPUT_NAME "repolib"
 )
+
 target_include_directories(repolib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/inc)
 
 # --------------------------
@@ -20,7 +21,7 @@ target_include_directories(repolib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/inc)
 install(TARGETS repolib
     LIBRARY DESTINATION lib
 )
-install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/inc/arith32.h DESTINATION include)
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/inc/arith32.h ${CMAKE_CURRENT_SOURCE_DIR}/inc/printSrc.h DESTINATION include)
 
 # --------------------------
 # Unit Testing (optional)
@@ -35,8 +36,18 @@ if(ENABLE_TESTS)
         ${CMAKE_CURRENT_SOURCE_DIR}/test/unity/unity.c
     )
 
+    add_executable(
+        test_namePrint
+        ${CMAKE_CURRENT_SOURCE_DIR}/test/test_printSrc.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/test/unity/unity.c
+    )
+
     target_include_directories(test_arith32 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/test/unity)
+    target_include_directories(test_namePrint PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/test/unity)
+
     target_link_libraries(test_arith32 repolib)
+    target_link_libraries(test_namePrint repolib)
 
     add_test(NAME Arith32Tests COMMAND test_arith32)
+    add_test(NAME NamePrintTests COMMAND test_namePrint)
 endif()
